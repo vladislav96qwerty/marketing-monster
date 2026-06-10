@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🦾 LinguaPlanner — Маркетинг-Монстр</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #10b981;
+    --danger: #ef4444;
+    --gold: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --font: 'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: linear-gradient(135deg, #0d0d18 0%, #1a0a2e 50%, #0d1a18 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 900;
+    font-size: 18px;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .logo-badge {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    -webkit-text-fill-color: white;
+    letter-spacing: 1px;
+  }
+
+  .stat-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .stat-pill .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent3);
+    box-shadow: 0 0 6px var(--accent3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .2s;
+    font-family: var(--font);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tab:hover { color: var(--text); background: var(--surface2); }
+
+  .tab.active {
+    background: linear-gradient(135deg, rgba(124,58,237,.2), rgba(6,182,212,.1));
+    border-color: rgba(124,58,237,.4);
+    color: var(--text);
+  }
+
+  main {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(90deg, rgba(124,58,237,.08), transparent);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .panel-title {
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .panel-body { padding: 16px; }
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  select, textarea, input[type="text"], input[type="number"] {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color .2s;
+    -webkit-appearance: none;
+  }
+
+  select:focus, textarea:focus, input:focus { border-color: var(--accent); }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media(max-width:500px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .2s;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #5b21b6);
+    color: white;
+    box-shadow: 0 4px 12px rgba(124,58,237,.3);
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(124,58,237,.4); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-cyan {
+    background: linear-gradient(135deg, var(--accent2), #0e7490);
+    color: white;
+    box-shadow: 0 4px 12px rgba(6,182,212,.3);
+  }
+
+  .btn-green {
+    background: linear-gradient(135deg, var(--accent3), #059669);
+    color: white;
+    box-shadow: 0 4px 12px rgba(16,185,129,.3);
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), #d97706);
+    color: white;
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
+  .btn-full { width: 100%; }
+
+  .output-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font-size: 14px;
+    line-height: 1.7;
+    min-height: 60px;
+    white-space: pre-wrap;
+    position: relative;
+  }
+
+  .output-box.loading {
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .spinner {
+    width: 16px; height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .copy-btn {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: var(--font);
+  }
+  .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    user-select: none;
+  }
+
+  .chip.selected {
+    background: linear-gradient(135deg, rgba(124,58,237,.2), rgba(6,182,212,.1));
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
+  /* CALENDAR */
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-cell {
+    aspect-ratio: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all .2s;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .cal-cell .day-num { font-weight: 700; font-size: 11px; }
+  .cal-cell .day-dot { width: 4px; height: 4px; border-radius: 50%; }
+  .cal-cell.has-post { border-color: rgba(124,58,237,.5); }
+  .cal-cell.has-post .day-dot { background: var(--accent); }
+  .cal-cell.today { border-color: var(--accent2); background: rgba(6,182,212,.08); }
+  .cal-cell:hover { border-color: var(--accent); }
+  .cal-cell.empty { opacity: .2; pointer-events: none; }
+
+  .cal-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .cal-day-name {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  /* TRACKER */
+  .tracker-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+
+  .tracker-platform {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .tracker-info { flex: 1; min-width: 0; }
+  .tracker-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tracker-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* STRATEGY */
+  .week-block {
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+    margin-bottom: 16px;
+  }
+
+  .week-block .week-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent2);
+    margin-bottom: 8px;
+  }
+
+  .week-task {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+
+  .week-task::before {
+    content: '→';
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* AB */
+  .ab-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+
+  .ab-label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: linear-gradient(135deg, var(--accent), #5b21b6);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 10px;
+    letter-spacing: .5px;
+  }
+
+  .ab-text { font-size: 14px; line-height: 1.5; margin-top: 6px; }
+
+  .score-bar {
+    margin-top: 10px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 1s ease;
+  }
+
+  /* IDEAS */
+  .idea-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all .2s;
+  }
+
+  .idea-item:hover { border-color: var(--accent); }
+
+  .idea-num {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .idea-text { font-size: 13px; line-height: 1.4; flex: 1; }
+  .idea-platform { font-size: 18px; flex-shrink: 0; }
+
+  /* RANGE */
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    margin: 8px 0;
+    padding: 0;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(124,58,237,.5);
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 9999;
+    transition: transform .3s ease;
+    white-space: nowrap;
+    box-shadow: 0 8px 24px rgba(0,0,0,.5);
+    pointer-events: none;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .section { display: none; }
+  .section.active { display: flex; flex-direction: column; gap: 16px; }
+
+  .field-group { margin-bottom: 14px; }
+
+  .row { display: flex; gap: 10px; align-items: flex-end; }
+  .row .field-group { flex: 1; margin-bottom: 0; }
+
+  .pack-post {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .pack-post-header {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(124,58,237,.08);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .pack-post-body {
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  /* Day detail popup */
+  .day-popup {
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
+    font-size: 13px;
+    line-height: 1.7;
+    display: none;
+  }
+  .day-popup.visible { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    🦾 LinguaPlanner
+    <span class="logo-badge">МОНСТР</span>
+  </div>
+  <div class="stat-pill"><div class="dot"></div> Активний</div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('posts',this)">✍️ Пости</button>
+  <button class="tab" onclick="switchTab('autopack',this)">🤖 Авто-пакет</button>
+  <button class="tab" onclick="switchTab('comment',this)">💬 Коментар</button>
+  <button class="tab" onclick="switchTab('ads',this)">📢 Реклама</button>
+  <button class="tab" onclick="switchTab('ab',this)">🧪 А/Б тест</button>
+  <button class="tab" onclick="switchTab('ideas',this)">💡 Ідеї</button>
+  <button class="tab" onclick="switchTab('avatar',this)">🎯 Аватар</button>
+  <button class="tab" onclick="switchTab('calendar',this)">📅 Календар</button>
+  <button class="tab" onclick="switchTab('tracker',this)">📊 Трекер</button>
+  <button class="tab" onclick="switchTab('strategy',this)">🗺️ Стратегія</button>
+</div>
+
+<main>
+
+<!-- ===== POSTS ===== -->
+<div class="section active" id="sec-posts">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">✍️ Генератор постів</div></div>
+    <div class="panel-body">
+      <div class="field-group">
+        <label>Платформа</label>
+        <div class="chips" id="platformChips">
+          <div class="chip selected" data-val="Telegram">📱 Telegram</div>
+          <div class="chip" data-val="Facebook">👥 Facebook</div>
+          <div class="chip" data-val="TikTok">🎵 TikTok</div>
+          <div class="chip" data-val="Instagram">📸 Instagram</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Тема</label>
+        <div class="chips" id="topicChips">
+          <div class="chip selected" data-val="розклад занять з drag & drop — як це рятує від хаосу">📅 Розклад</div>
+          <div class="chip" data-val="Telegram-нагадування учням — учні більше не забувають урок">📲 Нагадування</div>
+          <div class="chip" data-val="фінанси та облік боргів — хто скільки винен одним поглядом">💰 Фінанси</div>
+          <div class="chip" data-val="болі репетитора — хаос, Excel, учні що забувають">😤 Болі</div>
+          <div class="chip" data-val="порівняння LinguaPlanner vs Excel vs паперовий зошит">⚡ vs Excel</div>
+          <div class="chip" data-val="кейс: як репетитор заощадив час завдяки автоматизації">⭐ Кейс</div>
+          <div class="chip" data-val="PRO-підписка 150 грн — що входить і чому варте">🏆 PRO</div>
+          <div class="chip" data-val="гумор про репетиторство та знайомі ситуації">😂 Гумор</div>
+          <div class="chip" data-val="порада для репетиторів як організувати роботу">💡 Порада</div>
+          <div class="chip" data-val="повторювані уроки і meeting links — онлайн-репетитор">🌐 Онлайн</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Тон</label>
+        <div class="chips" id="toneChips">
+          <div class="chip selected" data-val="дружній та теплий — від репетитора до репетитора">😊 Дружній</div>
+          <div class="chip" data-val="провокаційний та чесний — говоримо про реальні проблеми">🔥 Провокація</div>
+          <div class="chip" data-val="мотивуючий — надихаємо на зміни">💪 Мотивація</div>
+          <div class="chip" data-val="сторітелінг — особиста історія або кейс">📖 Сторітелінг</div>
+          <div class="chip" data-val="експертний — ділимося знаннями без прямої реклами">🎓 Експерт</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Своя ідея (необов'язково)</label>
+        <textarea id="postCustom" placeholder="Наприклад: хочу розповісти про функцію нагадувань для учнів..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="generatePost()">✨ Згенерувати пост</button>
+    </div>
+  </div>
+
+  <div class="panel" id="postOutputPanel" style="display:none">
+    <div class="panel-header">
+      <div class="panel-title">📝 Готовий пост</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-outline btn-sm" onclick="copyOutputText('postOutput')">📋 Копіювати</button>
+        <button class="btn btn-outline btn-sm" onclick="saveToTracker()">💾 В трекер</button>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div id="postOutput" class="output-box"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUTOPACK ===== -->
+<div class="section" id="sec-autopack">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">🤖 Авто-пакет (10 постів за раз)</div></div>
+    <div class="panel-body">
+      <div class="field-group">
+        <label>Загальна тема пакету</label>
+        <textarea id="packTopic" placeholder="Наприклад: просування LinguaPlanner у жовтні, фокус на автоматизації..."></textarea>
+      </div>
+      <div class="field-group">
+        <label>Платформи</label>
+        <div class="chips" id="packPlatforms">
+          <div class="chip selected" data-val="Telegram">📱 TG</div>
+          <div class="chip selected" data-val="Facebook">👥 FB</div>
+          <div class="chip selected" data-val="Instagram">📸 Inst</div>
+          <div class="chip" data-val="TikTok">🎵 TikTok</div>
+        </div>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="generateAutoPack()">🚀 Генерувати 10 постів</button>
+    </div>
+  </div>
+  <div id="packOutput"></div>
+</div>
+
+<!-- ===== COMMENT ===== -->
+<div class="section" id="sec-comment">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">💬 Агент-коментатор</div></div>
+    <div class="panel-body">
+      <div class="field-group">
+        <label>Текст чужого поста</label>
+        <textarea id="commentInput" rows="5" placeholder="Вставте сюди текст поста, під яким треба залишити коментар..."></textarea>
+      </div>
+      <div class="field-group">
+        <label>Стиль коментаря</label>
+        <div class="chips" id="commentStyleChips">
+          <div class="chip selected" data-val="органічний — з нативною згадкою LinguaPlanner">🌿 Органічний</div>
+          <div class="chip" data-val="експертний — ділюсь досвідом без прямої реклами">🎓 Експертний</div>
+          <div class="chip" data-val="провокаційний — задаю питання що змушує думати">🤔 Питання</div>
+          <div class="chip" data-val="підтримуючий — підхвалюю та ділюсь своїм рішенням">🤝 Підтримка</div>
+        </div>
+      </div>
+      <button class="btn btn-cyan btn-full" onclick="generateComment()">💬 Написати коментар</button>
+    </div>
+  </div>
+  <div class="panel" id="commentOutputPanel" style="display:none">
+    <div class="panel-header">
+      <div class="panel-title">✅ Готовий коментар</div>
+      <button class="btn btn-outline btn-sm" onclick="copyOutputText('commentOutput')">📋 Копіювати</button>
+    </div>
+    <div class="panel-body">
+      <div id="commentOutput" class="output-box"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADS ===== -->
+<div class="section" id="sec-ads">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">📢 Рекламні оголошення</div></div>
+    <div class="panel-body">
+      <div class="field-group">
+        <label>Формат</label>
+        <div class="chips" id="adFormatChips">
+          <div class="chip selected" data-val="короткий банер до 100 символів">⚡ Банер</div>
+          <div class="chip" data-val="розгорнутий пост з перевагами">📄 Пост</div>
+          <div class="chip" data-val="текст для таргетованої реклами">🎯 Таргет</div>
+          <div class="chip" data-val="текст для TikTok/Reels відео">🎬 Відео-скрипт</div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Цільова аудиторія</label>
+        <div class="chips" id="adAudienceChips">
+          <div class="chip selected" data-val="репетитори англійської мови в Україні">🇬🇧 Англійська</div>
+          <div class="chip" data-val="репетитори будь-яких іноземних мов">🌍 Всі мови</div>
+          <div class="chip" data-val="репетитори з 5+ учнями що ведуть облік в Excel або зошиті">👩‍💼 Excel-втомлені</div>
+          <div class="chip" data-val="онлайн-репетитори що працюють через Zoom або Meet">💻 Онлайн</div>
+          <div class="chip" data-val="початківці-репетитори що тільки набирають учнів">🌱 Початківці</div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="generateAds()">📢 Створити 2 варіанти</button>
+    </div>
+  </div>
+  <div id="adsOutput"></div>
+</div>
+
+<!-- ===== AB TEST ===== -->
+<div class="section" id="sec-ab">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">🧪 А/Б тест заголовків</div></div>
+    <div class="panel-body">
+      <div class="field-group">
+        <label>Тема поста</label>
+        <textarea id="abTopicInput" placeholder="Про що пост? Наприклад: реклама функції розкладу в LinguaPlanner..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="generateAB()">⚡ Згенерувати 5 варіантів</button>
+    </div>
+  </div>
+  <div id="abOutput"></div>
+</div>
+
+<!-- ===== IDEAS ===== -->
+<div class="section" id="sec-ideas">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">💡 Ідея-машина</div></div>
+    <div class="panel-body">
+      <div class="field-group">
+        <label>Фокус ідей</label>
+        <div class="chips" id="ideasFocusChips">
+          <div class="chip selected" data-val="просування в соціальних мережах">📱 Соцмережі</div>
+          <div class="chip" data-val="контент для залучення репетиторів">🎯 Залучення</div>
+          <div class="chip" data-val="вірусний контент">🔥 Вірусний</div>
+          <div class="chip" data-val="освітній контент що демонструє цінність продукту">📚 Освітній</div>
+        </div>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="generateIdeas()">💡 Дати 20 ідей</button>
+    </div>
+  </div>
+  <div id="ideasOutput"></div>
+</div>
+
+<!-- ===== AVATAR ===== -->
+<div class="section" id="sec-avatar">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">🎯 Аватар ідеального клієнта</div></div>
+    <div class="panel-body">
+      <div class="field-group">
+        <label>Тип аватара</label>
+        <div class="chips" id="avatarTypeChips">
+          <div class="chip selected" data-val="репетитор англійської, 3-8 учнів, веде облік в Excel або зошиті, хоче більше порядку">🥇 Типовий</div>
+          <div class="chip" data-val="репетитор-початківець, 1-3 учні, тільки починає і шукає зручний інструмент">🌱 Початківець</div>
+          <div class="chip" data-val="досвідчений репетитор з 10+ учнями, час — головний ресурс, хоче автоматизації">💼 Досвідчений</div>
+          <div class="chip" data-val="онлайн-репетитор що проводить уроки через Zoom/Meet, учні з різних міст">🌐 Онлайн</div>
+          <div class="chip" data-val="репетитор що веде кілька предметів, не тільки англійська">📚 Мультипредмет</div>
+        </div>
+      </div>
+      <button class="btn btn-cyan btn-full" onclick="generateAvatar()">🎯 Побудувати аватар</button>
+    </div>
+  </div>
+  <div id="avatarOutput"></div>
+</div>
+
+<!-- ===== CALENDAR ===== -->
+<div class="section" id="sec-calendar">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">📅 Контент-календар на 30 днів</div>
+      <button class="btn btn-outline btn-sm" onclick="exportCalendar()">📥 .txt</button>
+    </div>
+    <div class="panel-body">
+      <div class="field-group">
+        <label>Інтенсивність публікацій</label>
+        <input type="range" id="freqSlider" min="1" max="3" value="2" oninput="updateFreqLabel(this.value)">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px">
+          <span>1/день</span>
+          <span id="freqLabel" style="color:var(--accent);font-weight:700">2 пости/день</span>
+          <span>3/день</span>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="generateCalendar()">📅 Скласти календар</button>
+    </div>
+  </div>
+  <div id="calendarOutput"></div>
+  <div class="day-popup" id="dayPopup"></div>
+</div>
+
+<!-- ===== TRACKER ===== -->
+<div class="section" id="sec-tracker">
+  <div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">📊 Трекер публікацій</div>
+      <button class="btn btn-outline btn-sm" onclick="exportTracker()">📥 Експорт</button>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="field-group">
+          <label>Платформа</label>
+          <select id="trackerPlatform">
+            <option value="📱 Telegram">📱 Telegram</option>
+            <option value="👥 Facebook">👥 Facebook</option>
+            <option value="📸 Instagram">📸 Instagram</option>
+            <option value="🎵 TikTok">🎵 TikTok</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Тема поста</label>
+          <input type="text" id="trackerTopic" placeholder="Назва або тема...">
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <div class="field-group">
+          <label>Переглядів</label>
+          <input type="number" id="trackerViews" placeholder="0" min="0">
+        </div>
+        <div class="field-group">
+          <label>Реакцій</label>
+          <input type="number" id="trackerReactions" placeholder="0" min="0">
+        </div>
+        <button class="btn btn-green" style="flex-shrink:0;margin-bottom:0" onclick="addTrackerItem()">+ Додати</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">📈 Статистика</div></div>
+    <div class="panel-body">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        <div style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px">
+          <div style="font-size:22px;font-weight:900;color:var(--accent)" id="statTotal">0</div>
+          <div style="font-size:11px;color:var(--muted)">Постів</div>
+        </div>
+        <div style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px">
+          <div style="font-size:22px;font-weight:900;color:var(--accent2)" id="statViews">0</div>
+          <div style="font-size:11px;color:var(--muted)">Переглядів</div>
+        </div>
+        <div style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px">
+          <div style="font-size:22px;font-weight:900;color:var(--accent3)" id="statReactions">0</div>
+          <div style="font-size:11px;color:var(--muted)">Реакцій</div>
+        </div>
+      </div>
+      <div id="trackerList"></div>
+      <div id="trackerEmpty" style="text-align:center;color:var(--muted);padding:20px;font-size:13px">
+        Ще немає записів. Додайте перший пост ↑
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STRATEGY ===== -->
+<div class="section" id="sec-strategy">
+  <div class="panel">
+    <div class="panel-header"><div class="panel-title">🗺️ Стратегія на 4 тижні</div></div>
+    <div class="panel-body">
+      <div class="grid-2">
+        <div class="field-group">
+          <label>Бюджет на тиждень (₴)</label>
+          <input type="number" id="stratBudget" placeholder="500" value="500" min="0">
+        </div>
+        <div class="field-group">
+          <label>Час на маркетинг/день</label>
+          <select id="stratTime">
+            <option value="30 хвилин">30 хвилин</option>
+            <option value="1 годину" selected>1 годину</option>
+            <option value="2 години">2 години</option>
+            <option value="3+ години">3+ години</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Поточна ситуація</label>
+        <div class="chips" id="stratSituationChips">
+          <div class="chip selected" data-val="тільки починаю просуватись — 0 учнів через інтернет">🌱 Старт</div>
+          <div class="chip" data-val="є кілька учнів через сарафан — хочу більше">📈 Ріст</div>
+          <div class="chip" data-val="вже просуваюсь але результатів мало">⚡ Масштаб</div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="generateStrategy()">🗺️ Скласти стратегію</button>
+    </div>
+  </div>
+  <div id="strategyOutput"></div>
+</div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let trackerItems = [];
+let calendarData = {};
+
+try { trackerItems = JSON.parse(localStorage.getItem('lp_tracker') || '[]'); } catch(e) {}
+try { calendarData = JSON.parse(localStorage.getItem('lp_calendar') || '{}'); } catch(e) {}
+
+// ============================================================
+// NAV
+// ============================================================
+function switchTab(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+  if (id === 'tracker') renderTracker();
+  if (id === 'calendar' && calendarData.days) renderCalendarGrid();
+}
+
+// ============================================================
+// CHIPS
+// ============================================================
+function setupChips(containerId, multiselect = false) {
+  const c = document.getElementById(containerId);
+  if (!c) return;
+  c.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      if (!multiselect) {
+        c.querySelectorAll('.chip').forEach(ch => ch.classList.remove('selected'));
+        chip.classList.add('selected');
+      } else {
+        chip.classList.toggle('selected');
+        // ensure at least one selected
+        if (!c.querySelector('.chip.selected')) chip.classList.add('selected');
+      }
+    });
+  });
+}
+
+function getSelected(containerId) {
+  const c = document.getElementById(containerId);
+  if (!c) return '';
+  const selected = [...c.querySelectorAll('.chip.selected')].map(ch => ch.dataset.val).filter(Boolean);
+  return selected.length ? selected.join(', ') : c.querySelector('.chip')?.dataset.val || '';
+}
+
+setupChips('platformChips');
+setupChips('topicChips');
+setupChips('toneChips');
+setupChips('packPlatforms', true);
+setupChips('commentStyleChips');
+setupChips('adFormatChips');
+setupChips('adAudienceChips');
+setupChips('ideasFocusChips');
+setupChips('avatarTypeChips');
+setupChips('stratSituationChips');
+
+// ============================================================
+// CLAUDE API
+// ============================================================
+async function callClaude(prompt, maxTokens = 1500) {
+  const OR_KEY = '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';
+  const system = `Ти — досвідчений маркетолог і копірайтер, що просуває LinguaPlanner. Знаєш продукт зсередини.
+
+ПРОДУКТ: LinguaPlanner — PWA-застосунок (також Android APK) для репетиторів іноземних мов.
+САЙТ: https://linguaplanner.vercel.app
+ЦІНА: PRO-підписка 150 грн/місяць. Є безкоштовний пробний період (trial).
+
+ФУНКЦІЇ (знай напам'ять, використовуй у контенті):
+• Розклад занять — місяць/тиждень/день/список + drag & drop (мишею і на дотик)
+• Фінанси — оплати, борги, аванси, статистика доходу по учнях
+• Учні — база з рівнем A1–C2, предметом, нотатками, тегами, архів
+• Telegram-нагадування учням — автоматичні нагадування про урок через бота
+• Push-сповіщення репетитору — Web Push + Android FCM
+• Статистика — графіки занять, доходу, активності
+• Meeting links — посилання на Zoom/Meet прямо в картці уроку
+• Повторювані уроки — recurring sessions одним кліком
+• Фінансові звіти — PDF та CSV експорт
+• Мобільний — встановлюється як PWA або Android APK
+• Офлайн-режим — працює без інтернету (Service Worker)
+• Двомовний — інтерфейс українська/англійська
+
+АУДИТОРІЯ: репетитори іноземних мов в Україні (в першу чергу англійська, але всі мови).
+БОЛІ: хаос у розкладі, учні забувають урок, складно рахувати борги, Excel незручний, немає мобільного рішення.
+ПОРІВНЯННЯ: програє Excel/Google Таблиці, паперовий зошит, звичайний календар телефону.
+LinguaPlanner виграє: автоматизація нагадувань, фінанси + розклад в одному місці, Telegram-інтеграція, мобільність.
+
+ТОНАЛЬНІСТЬ: живий, близький. Розмовний стиль — репетитор для репетитора. Не корпоративний.
+Завжди пиши ТІЛЬКИ українською мовою. Без вступів та пояснень — тільки готовий контент.`;
+
+  const resp = await fetch(
+    'https://openrouter.ai/api/v1/chat/completions',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OR_KEY}`,
+        'HTTP-Referer': 'https://linguaplanner.vercel.app',
+        'X-Title': 'LinguaPlanner Marketing Monster'
+      },
+      body: JSON.stringify({
+        model: 'deepseek/deepseek-r1-0528:free',
+        max_tokens: maxTokens,
+        temperature: 0.9,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: prompt }
+        ]
+      })
+    }
+  );
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({}));
+    throw new Error(err?.error?.message || 'API error ' + resp.status);
+  }
+  const data = await resp.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.choices?.[0]?.message?.content || '';
+}
+
+// ============================================================
+// LOADING HELPERS
+// ============================================================
+function setLoading(el, msg = 'Генерую...') {
+  el.innerHTML = `<div class="spinner"></div> ${msg}`;
+  el.classList.add('loading');
+}
+
+function setResult(el, text) {
+  el.classList.remove('loading');
+  el.textContent = text;
+}
+
+// ============================================================
+// 1. POST GENERATOR
+// ============================================================
+async function generatePost() {
+  const platform = getSelected('platformChips');
+  const topic = getSelected('topicChips');
+  const tone = getSelected('toneChips');
+  const custom = document.getElementById('postCustom').value.trim();
+
+  const panel = document.getElementById('postOutputPanel');
+  const out = document.getElementById('postOutput');
+  panel.style.display = 'block';
+  setLoading(out, 'Пишу пост...');
+
+  try {
+    const text = await callClaude(
+      `Напиши один готовий пост для ${platform} про LinguaPlanner.
+Тема: ${topic}${custom ? `. Деталі: ${custom}` : ''}
+Тон: ${tone}
+Враховуй специфіку платформи: довжину, хештеги якщо потрібно.
+Пост має бути живим, не рекламним. Додай заклик до дії.`
+    );
+    out.classList.remove('loading');
+    out.textContent = text;
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.textContent = '📋';
+    copyBtn.onclick = () => copyOutputText('postOutput');
+    out.appendChild(copyBtn);
+  } catch(e) {
+    setResult(out, '❌ Помилка: ' + e.message);
+  }
+}
+
+// ============================================================
+// 2. AUTO-PACK
+// ============================================================
+async function generateAutoPack() {
+  const topic = document.getElementById('packTopic').value.trim() || 'просування LinguaPlanner';
+  const platforms = getSelected('packPlatforms');
+  const outDiv = document.getElementById('packOutput');
+
+  outDiv.innerHTML = `<div class="panel"><div class="panel-body"><div class="output-box loading"><div class="spinner"></div> Генерую 10 постів... зазвичай 30-40 секунд</div></div></div>`;
+
+  try {
+    const text = await callClaude(
+      `Створи рівно 10 готових постів для просування LinguaPlanner.
+Загальна тема: ${topic}
+Платформи: ${platforms}
+Кожен блок ОБОВ'ЯЗКОВО починається з рядка: ===ПОСТ N | ПЛАТФОРМА===
+(N — число 1-10, ПЛАТФОРМА — одна з: ${platforms})
+Далі йде текст поста. Між блоками — порожній рядок.
+Різні теми, тони, формати. Всі готові до публікації.`,
+      4000
+    );
+    renderPack(text);
+  } catch(e) {
+    outDiv.innerHTML = `<div class="panel"><div class="panel-body" style="color:var(--danger)">❌ Помилка: ${e.message}</div></div>`;
+  }
+}
+
+function renderPack(text) {
+  const outDiv = document.getElementById('packOutput');
+  const platEmoji = { Telegram:'📱', Facebook:'👥', Instagram:'📸', TikTok:'🎵' };
+  const blocks = text.split(/===ПОСТ \d+\s*\|/i).filter(b => b.trim());
+  let html = '';
+
+  blocks.forEach((block, i) => {
+    const nlIdx = block.indexOf('\n');
+    const platRaw = nlIdx > -1 ? block.substring(0, nlIdx) : block;
+    const body = nlIdx > -1 ? block.substring(nlIdx).replace(/^===/, '').trim() : '';
+    if (!body) return;
+
+    const platKey = Object.keys(platEmoji).find(k => platRaw.includes(k)) || 'Пост';
+    const emoji = platEmoji[platKey] || '📝';
+    const safeBody = encodeURIComponent(body);
+
+    html += `<div class="pack-post">
+      <div class="pack-post-header">
+        <span>${emoji} ${platKey} · Пост ${i+1}</span>
+        <button class="btn btn-outline btn-sm" onclick="copyEncoded('${safeBody}')">📋</button>
+      </div>
+      <div class="pack-post-body">${escHtml(body)}</div>
+    </div>`;
+  });
+
+  if (!html) {
+    html = `<div class="output-box">${escHtml(text)}</div>`;
+  }
+
+  window._lastPackText = text;
+  outDiv.innerHTML = `<div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">🚀 10 готових постів</div>
+      <button class="btn btn-gold btn-sm" onclick="exportAllPosts()">📥 Скачати .txt</button>
+    </div>
+    <div class="panel-body">${html}</div>
+  </div>`;
+}
+
+// ============================================================
+// 3. COMMENT
+// ============================================================
+async function generateComment() {
+  const input = document.getElementById('commentInput').value.trim();
+  if (!input) { showToast('⚠️ Вставте текст поста'); return; }
+  const style = getSelected('commentStyleChips');
+
+  const panel = document.getElementById('commentOutputPanel');
+  const out = document.getElementById('commentOutput');
+  panel.style.display = 'block';
+  setLoading(out, 'Пишу коментар...');
+
+  try {
+    const text = await callClaude(
+      `Ось пост у соціальній мережі:
+---
+${input}
+---
+Напиши коментар під цей пост. Стиль: ${style}.
+Коментар природній, не рекламний. Якщо доречно — згадай LinguaPlanner як інструмент що ти використовуєш.
+Максимум 4 речення. Без хештегів.`
+    );
+    out.classList.remove('loading');
+    out.textContent = text;
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.textContent = '📋';
+    copyBtn.onclick = () => copyOutputText('commentOutput');
+    out.appendChild(copyBtn);
+  } catch(e) {
+    setResult(out, '❌ Помилка: ' + e.message);
+  }
+}
+
+// ============================================================
+// 4. ADS
+// ============================================================
+async function generateAds() {
+  const format = getSelected('adFormatChips');
+  const audience = getSelected('adAudienceChips');
+  const outDiv = document.getElementById('adsOutput');
+
+  outDiv.innerHTML = `<div class="panel"><div class="panel-body"><div class="output-box loading"><div class="spinner"></div> Пишу 2 варіанти...</div></div></div>`;
+
+  try {
+    const text = await callClaude(
+      `Напиши 2 рекламних оголошення для LinguaPlanner.
+Формат: ${format}
+Аудиторія: ${audience}
+
+ВАРІАНТ 1 — РАЦІОНАЛЬНИЙ:
+(логіка, факти, зручність, економія часу)
+
+ВАРІАНТ 2 — ЕМОЦІЙНИЙ:
+(болі, відчуття, трансформація)`,
+      2000
+    );
+
+    const v1Match = text.match(/ВАРІАНТ 1[^:]*:([\s\S]*?)(?=ВАРІАНТ 2|$)/i);
+    const v2Match = text.match(/ВАРІАНТ 2[^:]*:([\s\S]*?)$/i);
+    const v1 = v1Match ? v1Match[1].trim() : text;
+    const v2 = v2Match ? v2Match[1].trim() : '';
+
+    outDiv.innerHTML = `<div class="panel">
+      <div class="panel-header"><div class="panel-title">📢 2 варіанти оголошень</div></div>
+      <div class="panel-body">
+        <div class="ab-item" style="border-color:rgba(6,182,212,.4)">
+          <div class="ab-label" style="background:linear-gradient(135deg,#0e7490,#0284c7)">🧠 РАЦІОНАЛЬНИЙ</div>
+          <div class="ab-text">${escHtml(v1)}</div>
+          <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="copyEncoded('${encodeURIComponent(v1)}')">📋 Копіювати</button>
+        </div>
+        <div class="ab-item" style="border-color:rgba(239,68,68,.4);margin-top:16px">
+          <div class="ab-label" style="background:linear-gradient(135deg,#dc2626,#b91c1c)">❤️ ЕМОЦІЙНИЙ</div>
+          <div class="ab-text">${escHtml(v2)}</div>
+          <button class="btn btn-outline btn-sm" style="margin-top:10px" onclick="copyEncoded('${encodeURIComponent(v2)}')">📋 Копіювати</button>
+        </div>
+      </div>
+    </div>`;
+  } catch(e) {
+    outDiv.innerHTML = `<div class="panel"><div class="panel-body" style="color:var(--danger)">❌ ${e.message}</div></div>`;
+  }
+}
+
+// ============================================================
+// 5. A/B TEST
+// ============================================================
+async function generateAB() {
+  const topic = document.getElementById('abTopicInput').value.trim() || 'просування LinguaPlanner';
+  const outDiv = document.getElementById('abOutput');
+
+  outDiv.innerHTML = `<div class="panel"><div class="panel-body"><div class="output-box loading"><div class="spinner"></div> Генерую 5 заголовків...</div></div></div>`;
+
+  try {
+    const text = await callClaude(
+      `Тема: ${topic}
+Згенеруй 5 різних заголовків/першого речення для поста про LinguaPlanner.
+Кожен — різна стратегія: питання, цифра, провокація, обіцянка, storytelling.
+Оціни ймовірність кліку від 1 до 10.
+
+Формат СТРОГО:
+ЗАГОЛОВОК 1 [оцінка: X/10]:
+текст заголовку
+
+ЗАГОЛОВОК 2 [оцінка: X/10]:
+текст заголовку
+
+(і так далі до 5)`,
+      2000
+    );
+    renderAB(text);
+  } catch(e) {
+    outDiv.innerHTML = `<div class="panel"><div class="panel-body" style="color:var(--danger)">❌ ${e.message}</div></div>`;
+  }
+}
+
+function renderAB(text) {
+  const colors = ['#7c3aed','#06b6d4','#10b981','#f59e0b','#ef4444'];
+  const blocks = text.split(/ЗАГОЛОВОК \d+/i).filter(b => b.trim());
+  let html = '';
+
+  blocks.forEach((block, i) => {
+    const scoreMatch = block.match(/(\d+)\/10/);
+    const score = scoreMatch ? parseInt(scoreMatch[1]) : 7;
+    const cleanText = block.replace(/\[оцінка:[^\]]+\]/i,'').replace(/^[:\s]+/,'').trim();
+    const c = colors[i % colors.length];
+
+    html += `<div class="ab-item" style="border-color:${c}40;margin-top:${i?'16':'6'}px">
+      <div class="ab-label" style="background:${c}">Варіант ${i+1}</div>
+      <div class="ab-text">${escHtml(cleanText)}</div>
+      <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
+        <div class="score-bar" style="flex:1">
+          <div class="score-fill" style="width:${score*10}%;background:linear-gradient(90deg,${c},${colors[(i+1)%5]})"></div>
+        </div>
+        <span style="font-size:12px;font-weight:700;color:${c}">${score}/10</span>
+      </div>
+      <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="copyEncoded('${encodeURIComponent(cleanText)}')">📋 Копіювати</button>
+    </div>`;
+  });
+
+  if (!html) html = `<div class="output-box">${escHtml(text)}</div>`;
+
+  document.getElementById('abOutput').innerHTML = `<div class="panel">
+    <div class="panel-header"><div class="panel-title">🧪 5 варіантів заголовків</div></div>
+    <div class="panel-body">${html}</div>
+  </div>`;
+}
+
+// ============================================================
+// 6. IDEAS
+// ============================================================
+async function generateIdeas() {
+  const focus = getSelected('ideasFocusChips');
+  const outDiv = document.getElementById('ideasOutput');
+
+  outDiv.innerHTML = `<div class="panel"><div class="panel-body"><div class="output-box loading"><div class="spinner"></div> Генерую 20 ідей...</div></div></div>`;
+
+  try {
+    const text = await callClaude(
+      `Дай рівно 20 конкретних ідей для контенту про LinguaPlanner.
+Фокус: ${focus}
+Кожна ідея — одне речення, конкретна і готова до виконання.
+Для кожної вкажи найкращу платформу: TG / FB / Inst / TikTok.
+Формат: N. [ПЛАТФОРМА] Ідея`,
+      2000
+    );
+    renderIdeas(text);
+  } catch(e) {
+    outDiv.innerHTML = `<div class="panel"><div class="panel-body" style="color:var(--danger)">❌ ${e.message}</div></div>`;
+  }
+}
+
+function renderIdeas(text) {
+  const platMap = { TG:'📱', FB:'👥', Inst:'📸', TikTok:'🎵', Instagram:'📸', Facebook:'👥', Telegram:'📱' };
+  const lines = text.split('\n').filter(l => /^\d+\./.test(l.trim()));
+
+  const html = lines.map((line, i) => {
+    const platMatch = line.match(/\[(TG|FB|Inst|TikTok|Instagram|Facebook|Telegram)\]/i);
+    const plat = platMatch ? platMatch[1] : 'TG';
+    const emoji = platMap[plat] || '📱';
+    const clean = line.replace(/^\d+\.\s*/, '').replace(/\[[^\]]+\]\s*/, '').trim();
+
+    return `<div class="idea-item">
+      <div class="idea-num">${i+1}</div>
+      <div class="idea-text">${escHtml(clean)}</div>
+      <div class="idea-platform">${emoji}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('ideasOutput').innerHTML = `<div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">💡 20 ідей для контенту</div>
+      <button class="btn btn-outline btn-sm" onclick="copyEncoded('${encodeURIComponent(text)}')">📥 Всі</button>
+    </div>
+    <div class="panel-body">${html || `<div class="output-box">${escHtml(text)}</div>`}</div>
+  </div>`;
+}
+
+// ============================================================
+// 7. AVATAR
+// ============================================================
+async function generateAvatar() {
+  const type = getSelected('avatarTypeChips');
+  const outDiv = document.getElementById('avatarOutput');
+
+  outDiv.innerHTML = `<div class="panel"><div class="panel-body"><div class="output-box loading"><div class="spinner"></div> Будую аватар...</div></div></div>`;
+
+  try {
+    const text = await callClaude(
+      `Побудуй детальний портрет ідеального клієнта LinguaPlanner.
+Тип: ${type}.
+
+Відповідь СТРОГО в такому форматі:
+ІМ'Я ТА ВІК:
+[ім'я, вік, коротко хто]
+
+БОЛІ:
+[5 болів, кожен з нового рядка через -]
+
+БАЖАННЯ:
+[5 бажань, кожен з нового рядка через -]
+
+ЗАПЕРЕЧЕННЯ:
+[3 заперечення проти LinguaPlanner, через -]
+
+ДЕ ЗНАЙТИ:
+[конкретні групи, хештеги, спільноти в TG/FB/Inst/TikTok]
+
+ЩО ЗАЧЕПИТЬ:
+[ключові меседжі що спрацюють для цієї людини]`,
+      2000
+    );
+    renderAvatar(text);
+  } catch(e) {
+    outDiv.innerHTML = `<div class="panel"><div class="panel-body" style="color:var(--danger)">❌ ${e.message}</div></div>`;
+  }
+}
+
+function renderAvatar(text) {
+  const sections = [
+    { key: "ІМ'Я ТА ВІК", icon: '👤', color: '#7c3aed' },
+    { key: 'БОЛІ', icon: '😤', color: '#ef4444' },
+    { key: 'БАЖАННЯ', icon: '✨', color: '#10b981' },
+    { key: 'ЗАПЕРЕЧЕННЯ', icon: '🚧', color: '#f59e0b' },
+    { key: 'ДЕ ЗНАЙТИ', icon: '📍', color: '#8b5cf6' },
+    { key: 'ЩО ЗАЧЕПИТЬ', icon: '🎯', color: '#06b6d4' }
+  ];
+
+  const allKeys = sections.map(s => s.key);
+  let html = '<div style="display:flex;flex-direction:column;gap:12px">';
+
+  sections.forEach((sec, idx) => {
+    const nextKey = allKeys[idx + 1];
+    const regex = nextKey
+      ? new RegExp(`${sec.key}:?([\\s\\S]*?)(?=${nextKey}|$)`, 'i')
+      : new RegExp(`${sec.key}:?([\\s\\S]*)$`, 'i');
+    const match = text.match(regex);
+    const content = match ? match[1].trim() : '';
+    if (!content) return;
+
+    html += `<div style="background:var(--surface2);border:1px solid ${sec.color}40;border-radius:10px;padding:14px">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:${sec.color};margin-bottom:8px">${sec.icon} ${sec.key}</div>
+      <div style="font-size:13px;line-height:1.7;white-space:pre-wrap">${escHtml(content)}</div>
+    </div>`;
+  });
+
+  html += '</div>';
+
+  document.getElementById('avatarOutput').innerHTML = `<div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">🎯 Портрет клієнта</div>
+      <button class="btn btn-outline btn-sm" onclick="copyEncoded('${encodeURIComponent(text)}')">📋 Копіювати</button>
+    </div>
+    <div class="panel-body">${html}</div>
+  </div>`;
+}
+
+// ============================================================
+// 8. CALENDAR
+// ============================================================
+function updateFreqLabel(v) {
+  const labels = { '1': '1 пост/день', '2': '2 пости/день', '3': '3 пости/день' };
+  document.getElementById('freqLabel').textContent = labels[v] || v + '/день';
+}
+
+async function generateCalendar() {
+  const freq = document.getElementById('freqSlider').value;
+  const outDiv = document.getElementById('calendarOutput');
+
+  outDiv.innerHTML = `<div class="panel"><div class="panel-body"><div class="output-box loading"><div class="spinner"></div> Генерую 30-денний план...</div></div></div>`;
+
+  try {
+    const text = await callClaude(
+      `Склади контент-план LinguaPlanner на 30 днів (${freq} публікації/день).
+Відповідь ТІЛЬКИ у форматі JSON без пояснень та markdown:
+{"days":[{"day":1,"posts":[{"platform":"Telegram","topic":"коротка тема","type":"текст"}]},...]}
+Платформи: Telegram, Facebook, Instagram, TikTok.
+Типи: текст, сторіс, відео, Reels.
+Різноманітні теми щодня.`,
+      4000
+    );
+
+    try {
+      const clean = text.replace(/```json|```/g,'').trim();
+      calendarData = JSON.parse(clean);
+    } catch(e) {
+      calendarData = generateLocalCalendar(freq);
+    }
+    localStorage.setItem('lp_calendar', JSON.stringify(calendarData));
+    renderCalendarGrid();
+  } catch(e) {
+    calendarData = generateLocalCalendar(freq);
+    localStorage.setItem('lp_calendar', JSON.stringify(calendarData));
+    renderCalendarGrid();
+  }
+}
+
+function generateLocalCalendar(freq) {
+  const platforms = ['Telegram','Facebook','Instagram','TikTok'];
+  const topics = ['Розклад drag & drop','Telegram-нагадування учням','Облік боргів','Болі репетитора','vs Excel','Кейс успіху','PRO 150 грн','Гумор про репетиторство','Meeting links','Повторювані уроки','PDF звіти','Офлайн-режим','Мобільний додаток'];
+  const types = ['текст','сторіс','відео','Reels'];
+  const days = [];
+
+  for (let d = 1; d <= 30; d++) {
+    const posts = [];
+    for (let p = 0; p < parseInt(freq); p++) {
+      posts.push({
+        platform: platforms[(d + p) % 4],
+        topic: topics[(d * (p+1)) % topics.length],
+        type: types[(d+p) % 4]
+      });
+    }
+    days.push({ day: d, posts });
+  }
+  return { days };
+}
+
+function renderCalendarGrid() {
+  if (!calendarData.days) return;
+
+  const platEmoji = { Telegram:'📱', Facebook:'👥', Instagram:'📸', TikTok:'🎵' };
+  const today = new Date().getDate();
+  const dayNames = ['ПН','ВТ','СР','ЧТ','ПТ','СБ','НД'];
+
+  // Real offset: get first day of current month
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+  // Convert Sunday=0 to Mon-based: Mon=0..Sun=6
+  const offset = (firstDay + 6) % 7;
+
+  let gridHtml = '<div class="cal-header">';
+  dayNames.forEach(d => gridHtml += `<div class="cal-day-name">${d}</div>`);
+  gridHtml += '</div><div class="cal-grid">';
+
+  for (let i = 0; i < offset; i++) {
+    gridHtml += '<div class="cal-cell empty"></div>';
+  }
+
+  calendarData.days.forEach(dayData => {
+    const hasPost = dayData.posts && dayData.posts.length > 0;
+    const isToday = dayData.day === today;
+    const emojis = dayData.posts?.map(p => platEmoji[p.platform] || '📝').slice(0,2).join('') || '';
+
+    gridHtml += `<div class="cal-cell ${hasPost ? 'has-post' : ''} ${isToday ? 'today' : ''}" onclick="showDayDetail(${dayData.day})">
+      <span class="day-num">${dayData.day}</span>
+      <span style="font-size:9px;line-height:1">${emojis}</span>
+      ${hasPost ? '<div class="day-dot"></div>' : ''}
+    </div>`;
+  });
+
+  gridHtml += '</div>';
+
+  document.getElementById('calendarOutput').innerHTML = `<div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">📅 30 днів контенту</div>
+      <button class="btn btn-outline btn-sm" onclick="exportCalendar()">📥 .txt</button>
+    </div>
+    <div class="panel-body">${gridHtml}</div>
+  </div>`;
+}
+
+function showDayDetail(day) {
+  const dayData = calendarData.days?.find(d => d.day === day);
+  const popup = document.getElementById('dayPopup');
+  if (!dayData || !popup) return;
+
+  // Toggle: click same day again to close
+  if (popup.dataset.openDay === String(day) && popup.classList.contains('visible')) {
+    popup.classList.remove('visible');
+    popup.dataset.openDay = '';
+    return;
+  }
+  popup.dataset.openDay = String(day);
+
+  const platEmoji = { Telegram:'📱', Facebook:'👥', Instagram:'📸', TikTok:'🎵' };
+
+  const postsHtml = dayData.posts?.map(p =>
+    `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:18px">${platEmoji[p.platform]||'📝'}</span>
+      <div>
+        <div style="font-size:13px;font-weight:600">${escHtml(p.platform)}</div>
+        <div style="font-size:12px;color:var(--muted)">${escHtml(p.topic)} · ${escHtml(p.type)}</div>
+      </div>
+    </div>`
+  ).join('') || '<div style="color:var(--muted)">Немає постів</div>';
+
+  popup.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-weight:700;color:var(--accent2)">📅 День ${day}</div>
+      <button onclick="document.getElementById('dayPopup').classList.remove('visible');document.getElementById('dayPopup').dataset.openDay='';" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1;padding:0">✕</button>
+    </div>${postsHtml}`;
+  popup.classList.add('visible');
+  popup.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function exportCalendar() {
+  if (!calendarData.days) { showToast('⚠️ Спочатку згенеруйте календар'); return; }
+  const lines = calendarData.days.map(d =>
+    `День ${d.day}:\n${d.posts?.map(p => `  - ${p.platform}: ${p.topic} [${p.type}]`).join('\n') || '  - відпочинок'}`
+  );
+  downloadFile('linguaplanner-calendar.txt', lines.join('\n\n'));
+}
+
+// ============================================================
+// 9. TRACKER
+// ============================================================
+function addTrackerItem() {
+  const platform = document.getElementById('trackerPlatform').value;
+  const topic = document.getElementById('trackerTopic').value.trim() || 'Без назви';
+  const views = Math.max(0, parseInt(document.getElementById('trackerViews').value) || 0);
+  const reactions = Math.max(0, parseInt(document.getElementById('trackerReactions').value) || 0);
+
+  trackerItems.push({ id: Date.now(), platform, topic, views, reactions, date: new Date().toLocaleDateString('uk') });
+
+  try { localStorage.setItem('lp_tracker', JSON.stringify(trackerItems)); } catch(e) {}
+
+  document.getElementById('trackerTopic').value = '';
+  document.getElementById('trackerViews').value = '';
+  document.getElementById('trackerReactions').value = '';
+  renderTracker();
+  showToast('✅ Пост додано до трекера');
+}
+
+function renderTracker() {
+  const list = document.getElementById('trackerList');
+  const empty = document.getElementById('trackerEmpty');
+  if (!list) return;
+
+  document.getElementById('statTotal').textContent = trackerItems.length;
+  document.getElementById('statViews').textContent = trackerItems.reduce((a,i) => a + i.views, 0).toLocaleString('uk');
+  document.getElementById('statReactions').textContent = trackerItems.reduce((a,i) => a + i.reactions, 0).toLocaleString('uk');
+
+  if (!trackerItems.length) {
+    list.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  const platColors = { '📱 Telegram':'#2563eb22', '👥 Facebook':'#1d4ed822', '📸 Instagram':'#db277722', '🎵 TikTok':'#0f766e22' };
+
+  list.innerHTML = [...trackerItems].reverse().map(item => `
+    <div class="tracker-item">
+      <div class="tracker-platform" style="background:${platColors[item.platform]||'#7c3aed22'}">${item.platform.split(' ')[0]}</div>
+      <div class="tracker-info">
+        <div class="tracker-title">${escHtml(item.topic)}</div>
+        <div class="tracker-meta">${item.date} · 👁 ${item.views.toLocaleString('uk')} · ❤️ ${item.reactions.toLocaleString('uk')}</div>
+      </div>
+      <button onclick="deleteTracker(${item.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;flex-shrink:0" title="Видалити">🗑</button>
+    </div>`).join('');
+}
+
+function deleteTracker(id) {
+  trackerItems = trackerItems.filter(i => i.id !== id);
+  try { localStorage.setItem('lp_tracker', JSON.stringify(trackerItems)); } catch(e) {}
+  renderTracker();
+  showToast('🗑 Запис видалено');
+}
+
+function exportTracker() {
+  if (!trackerItems.length) { showToast('⚠️ Немає даних'); return; }
+  const header = 'Дата | Платформа | Тема | Переглядів | Реакцій';
+  const lines = trackerItems.map(i => `${i.date} | ${i.platform} | ${i.topic} | ${i.views} | ${i.reactions}`);
+  downloadFile('linguaplanner-tracker.txt', [header, ...lines].join('\n'));
+}
+
+function saveToTracker() {
+  const out = document.getElementById('postOutput');
+  // Get only the text content, not the copy button
+  const clone = out.cloneNode(true);
+  clone.querySelectorAll('button').forEach(b => b.remove());
+  const text = clone.textContent.trim();
+  if (!text) { showToast('⚠️ Спочатку згенеруйте пост'); return; }
+
+  const plat = getSelected('platformChips');
+  trackerItems.push({ id: Date.now(), platform: plat, topic: text.substring(0, 60).trim() + '...', views: 0, reactions: 0, date: new Date().toLocaleDateString('uk') });
+  try { localStorage.setItem('lp_tracker', JSON.stringify(trackerItems)); } catch(e) {}
+  renderTracker();
+  showToast('💾 Збережено в трекер');
+}
+
+// ============================================================
+// 10. STRATEGY
+// ============================================================
+async function generateStrategy() {
+  const budget = document.getElementById('stratBudget').value || '500';
+  const time = document.getElementById('stratTime').value;
+  const situation = getSelected('stratSituationChips');
+  const outDiv = document.getElementById('strategyOutput');
+
+  outDiv.innerHTML = `<div class="panel"><div class="panel-body"><div class="output-box loading"><div class="spinner"></div> Розробляю стратегію...</div></div></div>`;
+
+  try {
+    const text = await callClaude(
+      `Розроби маркетингову стратегію просування LinguaPlanner на 4 тижні.
+Бюджет: ${budget} грн/тиждень
+Час: ${time} на день
+Ситуація: ${situation}
+
+Відповідь строго у такому форматі:
+ТИЖДЕНЬ 1 — [назва етапу]:
+- дія 1
+- дія 2
+- дія 3
+
+ТИЖДЕНЬ 2 — [назва]:
+- ...
+
+ТИЖДЕНЬ 3 — [назва]:
+- ...
+
+ТИЖДЕНЬ 4 — [назва]:
+- ...
+
+МЕТРИКИ УСПІХУ:
+- метрика 1
+- метрика 2`,
+      2500
+    );
+    renderStrategy(text);
+  } catch(e) {
+    outDiv.innerHTML = `<div class="panel"><div class="panel-body" style="color:var(--danger)">❌ ${e.message}</div></div>`;
+  }
+}
+
+function renderStrategy(text) {
+  const colors = ['#7c3aed','#06b6d4','#10b981','#f59e0b'];
+  const weekBlocks = text.split(/ТИЖДЕНЬ \d+/i).filter(w => w.trim());
+
+  let html = '';
+  weekBlocks.forEach((week, i) => {
+    if (i >= 4) return; // max 4 weeks
+    const lines = week.split('\n').map(l => l.trim()).filter(Boolean);
+    const title = lines[0].replace(/^[—\-–:]+\s*/, '').trim();
+    const tasks = lines.slice(1).filter(l => l.startsWith('-') || l.startsWith('•'));
+
+    html += `<div class="week-block" style="border-color:${colors[i]}">
+      <div class="week-label" style="color:${colors[i]}">Тиждень ${i+1}${title ? ' — ' + title : ''}</div>
+      ${tasks.map(t => `<div class="week-task">${escHtml(t.replace(/^[-•]+\s*/,''))}</div>`).join('')}
+    </div>`;
+  });
+
+  const metricsMatch = text.match(/МЕТРИКИ[^:]*:([\s\S]*)$/i);
+  if (metricsMatch) {
+    html += `<div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);border-radius:10px;padding:14px">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent3);margin-bottom:8px">📊 Метрики успіху</div>
+      <div style="font-size:13px;line-height:1.7;white-space:pre-wrap">${escHtml(metricsMatch[1].trim())}</div>
+    </div>`;
+  }
+
+  if (!html) html = `<div class="output-box">${escHtml(text)}</div>`;
+
+  document.getElementById('strategyOutput').innerHTML = `<div class="panel">
+    <div class="panel-header">
+      <div class="panel-title">🗺️ Стратегія на 4 тижні</div>
+      <button class="btn btn-outline btn-sm" onclick="copyEncoded('${encodeURIComponent(text)}')">📋 Копіювати</button>
+    </div>
+    <div class="panel-body">${html}</div>
+  </div>`;
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+// Copy from output box (strips any child buttons)
+function copyOutputText(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const clone = el.cloneNode(true);
+  clone.querySelectorAll('button').forEach(b => b.remove());
+  const text = clone.textContent.trim();
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Скопійовано!')).catch(() => showToast('❌ Помилка копіювання'));
+}
+
+// Copy from encoded data attribute
+function copyEncoded(encoded) {
+  const text = decodeURIComponent(encoded);
+  navigator.clipboard.writeText(text).then(() => showToast('📋 Скопійовано!')).catch(() => showToast('❌ Помилка'));
+}
+
+let _toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function downloadFile(name, content) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  showToast('📥 Файл завантажено!');
+}
+
+function exportAllPosts() {
+  if (window._lastPackText) downloadFile('linguaplanner-10posts.txt', window._lastPackText);
+  else showToast('⚠️ Спочатку згенеруйте пакет');
+}
+
+// Init
+renderTracker();
+</script>
+</body>
+</html>
